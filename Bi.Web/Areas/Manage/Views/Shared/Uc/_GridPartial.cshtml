@@ -1,0 +1,186 @@
+﻿<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bsgrid/jquery-ui.min.css")">
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bsgrid/jquery.bs_grid.min.css")">
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bsgrid/jquery.bs_pagination.min.css")">
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bsgrid/jquery.jui_filter_rules.css")">
+<script type="text/javascript" src="@Url.Content("~/Scripts/bsgrid/jquery-ui.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bsgrid/jquery.ui.touch-punch.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bsgrid/jquery.bs_pagination.min.js")" charset="utf-8"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bsgrid/jquery.jui_filter_rules.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bsgrid/moment.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bsgrid/jquery.bs_grid.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bsgrid/bs_grid/en.min.js")" charset="utf-8"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bsgrid/bs_pagination/en.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bsgrid/jui_filter_rules/en.js")"></script>
+
+<div id="list"></div>
+@using System.Text;
+@using Bi.Utility;
+@model Bi.Web.Areas.Manage.Models.GridVM
+@{
+    StringBuilder cols = new StringBuilder();
+
+
+    foreach (System.Data.DataRow dr in Model.dsRows)
+    {
+        string colName = dr["ColName"] != null ? dr["ColName"].ToString() : "";
+        string colType = dr["ColType"] != null ? dr["ColType"].ToString() : "";
+
+        if (colName.CompareTo(Model.RowPrimaryKey) == 0)
+        {
+            cols.Append("{ field: '" + Model.RowPrimaryKey + "', header: 'Code' },");
+        }
+        else if(!Pub.IsHidenColumn(colName))
+        {
+            switch (colType)
+            {
+                case "CHAR":
+                    cols.Append("{ field: '" + colName + "', header: '" + colName + "' },");
+                    break;
+                case "NUMBER":
+                    cols.Append("{ field: '" + colName + "', header: '" + colName + "', dataClass:'text-right' },");
+                    break;
+                case "VARCHAR2":
+                    cols.Append("{ field: '" + colName + "', header: '" + colName + "' },");
+                    break;
+                default:
+                    cols.Append("{ field: '" + colName + "', header: '" + colName + "' },");
+                    break;
+            }
+        }
+    }
+}
+<script>
+    $(function () {
+        var key = "@Server.UrlEncode("主键")";
+
+        $("#list").bs_grid({
+
+            ajaxFetchDataURL: "http://localhost:50263/App/Ajax/QueryCall.ashx?PrimaryKeyCol=" + key + "&ViewName=BI_V_USERS",
+
+            onRowClick: function (event, data) {
+                // your code here e.g.
+                console.log('Row with ID ' + data.row_id + ' ' + data.row_status + '.');
+                $("#list").bs_grid('selectedRows', 'mark_selected', data.row_id);
+            },
+            row_primary_key: "主键",
+            table_id_prefix: "bi_",
+            filterContainerClass: "modal fade",
+            filterToolsClass: "modal-footer",
+            columns: [
+                { field: "主键", header: "Code" },
+                { field: "登录名称", header: "登录名称" },
+                { field: "用户姓名", header: "用户姓名" },
+                { field: "状态", header: "状态", "sortable": "no" },
+                { field: "用户类型", header: "用户类型" },
+                { field: "登录次数", header: "登录次数", dataClass: 'text-right' },
+                { field: "建立时间", header: "建立时间" },
+            ],
+
+            sorting: [
+                //{ sortingName: "Code", field: "主键", order: "none" },
+                //{ sortingName: "登录名称", field: "登录名称", order: "ascending" },
+                //{ sortingName: "用户姓名", field: "用户姓名", order: "ascending" },
+                //{ sortingName: "建立时间", field: "建立时间", order: "none" }
+            ],
+
+            filterOptions: {
+                filters: [
+                    {
+                        filterName: "用户姓名", "filterType": "text", field: "用户姓名", filterLabel: "用户姓名",
+                        excluded_operators: ["in", "not_in", "begins_with", "not_begins_with", "not_contains"
+                            , "ends_with", "not_ends_with", "is_empty", "is_not_empty"
+                        , "is_null", "is_not_null"],
+                        filter_interface: [
+                            {
+                                filter_element: "input",
+                                filter_element_attributes: { "type": "text" }
+                            }
+                        ]
+                    },
+                    {
+                        filterName: "状态", "filterType": "text", field: "状态", filterLabel: "状态",
+                        excluded_operators: ["equal", "not_equal", "less", "less_or_equal", "greater", "greater_or_equal"],
+                        filter_interface: [
+                            {
+                                filter_element: "input",
+                                filter_element_attributes: { type: "checkbox" }
+                            }
+                        ],
+                        lookup_values: [
+                            { lk_option: "启用", lk_value: "启用", lk_selected: "yes" },
+                            { lk_option: "停用", lk_value: "停用" }
+                        ]
+                    },
+                    {
+                        filterName: "建立时间", "filterType": "date", field: "建立时间", filterLabel: "建立时间",
+                        excluded_operators: ["in", "not_in"],
+                        filter_interface: [
+                            {
+                                filter_element: "input",
+                                filter_element_attributes: {
+                                    type: "text",
+                                    title: "Set the date and time using format: dd/mm/yyyy hh:mm:ss"
+                                },
+                                filter_widget: "datetimepicker",
+                                filter_widget_properties: {
+                                    dateFormat: "dd/mm/yy",
+                                    timeFormat: "HH:mm:ss",
+                                    changeMonth: true,
+                                    changeYear: true,
+                                    showSecond: true
+                                }
+                            }
+                        ],
+                        validate_dateformat: ["DD/MM/YYYY HH:mm:ss"],
+                        filter_value_conversion: {
+                            function_name: "local_datetime_to_UTC_timestamp",
+                            args: [
+                                { "filter_value": "yes" },
+                                { "value": "DD/MM/YYYY HH:mm:ss" }
+                            ]
+                        }
+                    }
+                ]
+            }
+        });
+    });
+
+    function BindEdit(btn, action) {
+        $(btn).click(function () {
+            var contrPath = location.href.substr(0, location.href.lastIndexOf("/") + 1);
+            location.href = (contrPath + action + "/" + $("#list").bs_grid('selectedRows', 'get_ids')).toLowerCase();
+        });
+    }
+
+    function local_datetime_to_UTC_timestamp(date_str, dateformat) {
+
+        // avoid date overflow in user input (moment("14/14/2005", "DD/MM/YYYY") => Tue Feb 14 2006)
+        if (moment(date_str, dateformat).isValid() == false) {
+            throw new Error("Invalid date");
+        }
+
+        // parse date string using given dateformat and create a javascript date object
+        var date = moment(date_str, dateformat).toDate();
+
+        // use javascript getUTC* functions to conv ert to UTC
+        return date.getUTCFullYear() +
+            PadDigits(date.getUTCMonth() + 1, 2) +
+            PadDigits(date.getUTCDate(), 2) +
+            PadDigits(date.getUTCHours(), 2) +
+            PadDigits(date.getUTCMinutes(), 2) +
+            PadDigits(date.getUTCSeconds(), 2);
+
+    }
+
+
+    function PadDigits(n, totalDigits) {
+        n = n.toString();
+        var pd = '';
+        if (totalDigits > n.length) {
+            for (i = 0; i < (totalDigits - n.length) ; i++) {
+                pd += '0';
+            }
+        }
+        return pd + n.toString();
+    }
+</script>

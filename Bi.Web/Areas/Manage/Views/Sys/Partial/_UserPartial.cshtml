@@ -1,0 +1,229 @@
+﻿@model Bi.Domain.TB_ADMIN_USER
+@Html.HiddenFor(m => m.USER_ID)
+<div class="row">
+    <div class="col-md-6 margin-bottom-15">
+        <div class="btn-group" data-toggle="buttons">
+            @if (Model != null)
+            {
+                switch (Model.USER_TYPE)
+                {
+                    case 0:
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbUserType", "1", false)<text>后台管理</text>
+                        </label>
+                        <label class="btn btn-primary active">
+                            @Html.RadioButton("rbUserType", "0", true)<text>KM用户</text>
+                        </label>
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbUserType", "2", false)<text>平台用户</text>
+                        </label>
+                        break;
+                    case 1:
+                        <label class="btn btn-primary active">
+                            @Html.RadioButton("rbUserType", "1", true)<text>后台管理</text>
+                        </label>
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbUserType", "0", false)<text>KM用户</text>
+                        </label>
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbUserType", "2", false)<text>平台用户</text>
+                        </label>
+                        break;
+                    case 2:
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbUserType", "1", false)<text>后台管理</text>
+                        </label>
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbUserType", "0", false)<text>KM用户</text>
+                        </label>
+                        <label class="btn btn-primary active">
+                            @Html.RadioButton("rbUserType", "2", true)<text>平台用户</text>
+                        </label>
+                        break;
+                }
+            }
+            else
+            {
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbUserType", "1", false)<text>后台管理</text>
+                </label>
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbUserType", "0", true)<text>KM用户</text>
+                </label>
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbUserType", "2", false)<text>平台用户</text>
+                </label>
+            }
+        </div>
+    </div>
+    <div class="col-md-6 margin-bottom-15">
+        <div class="btn-group" data-toggle="buttons">
+            @if (Model != null && Model.STATUS == 1)
+            {
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbIsEnable", "1", true)<text>启用</text>
+                </label>
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbIsEnable", "0", false)<text>停用</text>
+                </label>
+            }
+            else
+            {
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbIsEnable", "1", false)<text>启用</text>
+                </label>
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbIsEnable", "0", true)<text>停用</text>
+                </label>
+            }
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.USER_NAME, "用户编号", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.USER_NAME, new Dictionary<string, object>() { { "class", "form-control IsRequired IsPositiveNum2" }
+       , { "title", "用户编号" }
+       , { "maxlength", "50" } })
+        @Html.ValidationMessageFor(m => m.USER_NAME)
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.CN_NAME, "用户名称", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.CN_NAME, new { @maxlength = "100", @class = "form-control IsRequired", @title = "用户名称" })
+        @Html.ValidationMessageFor(m => m.CN_NAME)
+    </div>
+</div>
+
+<div class="row ">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.PASSWORD, "创建密码", new { @class = "control-label" })
+        @Html.PasswordFor(m => m.PASSWORD, new { @maxlength = "20", @class = "form-control IsRequired pwd", @title = "用户密码" })
+        @Html.ValidationMessageFor(m => m.PASSWORD)
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.ComparePwd, "确认密码", new { @class = "control-label" })
+        @Html.PasswordFor(m => m.ComparePwd, new { @maxlength = "20", @class = "form-control IsRequired pwd", @title = "确认密码" })
+        @Html.ValidationMessageFor(m => m.ComparePwd)
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 margin-bottom-15">
+        <label for="roleType">角色分类</label>
+        <select multiple="multiple" class="form-control" style="height:250px;" id="roleType"></select>
+    </div>
+    <div class="col-md-4 margin-bottom-15">
+        <label for="roleName">角色列表（双击添加）</label>
+        <select multiple="multiple" class="form-control" style="height:250px;" id="roleName"></select>
+    </div>
+    <div class="col-md-4 margin-bottom-15">
+        <label for="selectedRoles">已选角色（双击删除）</label>
+        <select multiple="multiple" class="form-control" style="height:250px;" id="selectedRoles" name="selectedRoles">
+            @if (Model != null)
+            {
+                foreach (var r in Model.Roles)
+                {
+                    <text>
+                        <option value="@r.ROLE_ID">@r.ROLE_NAME</option></text>
+                }
+            }
+        </select>
+        @if (Model != null)
+        {
+            <input type="hidden" id="selectRoleIds" name="selectRoleIds" value="@string.Join(",",Model.Roles.Select(it => it.ROLE_ID).ToArray())" />
+        }
+        else
+        {
+            <input type="hidden" id="selectRoleIds" name="selectRoleIds" value="" />
+        }
+    </div>
+    <script>
+        $(function () {
+            var url = "/Manage/Sys/GetRoles";
+
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: url,
+                beforeSend: function () { },
+                success: function (roles) { // roles 返回的json数据
+                    var roles = $.parseJSON(roles);
+
+                    $.each(roles, function (idx, item) {
+                        if ($("#roleType option[value='" + item.ROLE_TYPE + "']").length == 0) {
+                            $("#roleType").append("<option value='" + item.ROLE_TYPE + "'>" + item.ROLE_TYPE + "</option>");
+                        }
+                    });
+                    $("#roleType").change(function () {
+                        $("#roleName option").remove();
+                        if ($("#roleType option").length > 0) {
+                            $.each(roles, function (idx, item) {
+                                if (item.ROLE_TYPE == $("#roleType").val()) {
+                                    $("#roleName").append("<option value='" + item.ROLE_ID + "'>" + item.ROLE_NAME + "</option>");
+                                }
+                            });
+                        }
+                    });
+
+                    $("#roleName").dblclick(function () {
+                        if ($("#roleName option").length > 0) {
+                            var optionText = $("#roleName").find("option:selected").text();
+                            var optionVal = $("#roleName").val();
+                            if (optionText != "" && $("#selectedRoles option[value='" + optionVal + "']").length == 0) {
+                                $("#selectedRoles").append("<option value='" + optionVal + "'>" + optionText + "</option>");
+                                if ($("#selectRoleIds").val() == "")
+                                    $("#selectRoleIds").val(optionVal + ",");
+                                else
+                                    $("#selectRoleIds").val($("#selectRoleIds").val() + optionVal + ",");
+                            }
+                        }
+                    });
+
+                    $("#selectedRoles").dblclick(function () {
+                        if ($("#selectedRoles option").length > 0) {
+                            var optionVal = $("#selectedRoles").val();
+                            $("#selectedRoles option[value='" + optionVal + "']").remove();
+                            $("#selectRoleIds").val($("#selectRoleIds").val().replace(optionVal + ",", ""));
+                        }
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    var errs = ParseExceptionMsg(xhr);
+                    ShowMsgDialog(errs, "no", false);
+                },
+                complete: function () { }
+            });
+
+            if ($("input[name='rbUserType']:checked").val() == "@((short)Bi.Utility.UserType.KM_USER)") {
+                $(".pwd").attr("disabled", "disabled");
+            }
+
+            $("input[name='rbUserType']").change(function () {
+                if ($(this).val() == "@((short)Bi.Utility.UserType.KM_USER)")//km用户
+                {
+                    $(".pwd").attr("disabled", "disabled").val("");
+                } else {
+                    $(".pwd").removeAttr("disabled");
+                }
+            });
+        });
+    </script>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        <span id="msgArea"></span>
+    </div>
+</div>
+<div class="row templatemo-form-buttons">
+    <div class="col-md-12">
+        <button id="btnSave" type="button" class="btn btn-primary SubmitLock" data-toggle="modal">提交</button>
+        <button id="btnReset" type="reset" class="btn btn-default">重置</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15"></div>
+</div>

@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Model.Store" Provider="Oracle.ManagedDataAccess.Client" ProviderManifestToken="10.2" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="TB_ADMIN_USER">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="USER_NAME" Type="varchar2" MaxLength="100" />
+          <Property Name="PASSWORD" Type="varchar2" MaxLength="100" />
+          <Property Name="CN_NAME" Type="varchar2" MaxLength="100" />
+          <Property Name="STATUS" Type="number" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="CREATEDATE" Type="date" />
+          <Property Name="LOGINCOUNT" Type="number" Precision="38" Scale="0" />
+          <Property Name="LASTLOGINDATE" Type="date" />
+          <Property Name="SECURITYSTAMP" Type="varchar2" MaxLength="50" />
+          <Property Name="USER_TYPE" Type="number" Precision="2" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TB_ROLE_DIR">
+          <Key>
+            <PropertyRef Name="ROLE_ID" />
+            <PropertyRef Name="DIR_ID" />
+          </Key>
+          <Property Name="ROLE_ID" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="DIR_ID" Type="varchar2" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TB_SYS_DIR">
+          <Key>
+            <PropertyRef Name="DIR_ID" />
+          </Key>
+          <Property Name="DIR_ID" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="PARENT_ID" Type="varchar2" MaxLength="50" />
+          <Property Name="ENABLED" Type="number" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="DIR_VIEW" Type="varchar2" MaxLength="100" />
+          <Property Name="DIR_NAME" Type="varchar2" MaxLength="100" />
+          <Property Name="DIR_URL" Type="varchar2" MaxLength="500" />
+          <Property Name="DIR_TYPE" Type="number" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="MEMO" Type="varchar2" MaxLength="500" />
+          <Property Name="SORT_NO" Type="number" Precision="5" Scale="0" />
+          <Property Name="DELETED" Type="number" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="IS_GROUP" Type="number" Precision="38" Scale="0" />
+        </EntityType>
+        <EntityType Name="TB_SYS_LOG">
+          <Key>
+            <PropertyRef Name="LOGID" />
+          </Key>
+          <Property Name="LOGID" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="USERID" Type="varchar2" MaxLength="50" />
+          <Property Name="FUNNAME" Type="varchar2" MaxLength="100" />
+          <Property Name="LOGTIME" Type="date" />
+          <Property Name="OPERATION" Type="varchar2" MaxLength="100" />
+          <Property Name="MEMO1" Type="varchar2" MaxLength="4000" />
+          <Property Name="MEMO2" Type="varchar2" MaxLength="4000" />
+          <Property Name="URL" Type="varchar2" MaxLength="100" />
+          <Property Name="IP" Type="varchar2" MaxLength="200" />
+          <Property Name="BIZID" Type="varchar2" MaxLength="100" />
+          <Property Name="BIZCODE" Type="varchar2" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="TB_SYS_ROLE">
+          <Key>
+            <PropertyRef Name="ROLE_ID" />
+          </Key>
+          <Property Name="ROLE_ID" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="ROLE_NAME" Type="varchar2" MaxLength="50" />
+          <Property Name="ROLE_TYPE" Type="varchar2" MaxLength="50" />
+          <Property Name="DESCR" Type="varchar2" MaxLength="500" />
+          <Property Name="IS_ADMIN" Type="number" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="STATUS" Type="number" Precision="2" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TB_USER_ROLE">
+          <Key>
+            <PropertyRef Name="ROLE_ID" />
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="ROLE_ID" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="USER_ID" Type="varchar2" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="TB_ADMIN_USER" EntityType="Self.TB_ADMIN_USER" Schema="CNJSB01" store:Type="Tables" />
+          <EntitySet Name="TB_ROLE_DIR" EntityType="Self.TB_ROLE_DIR" Schema="CNJSB01" store:Type="Tables" />
+          <EntitySet Name="TB_SYS_DIR" EntityType="Self.TB_SYS_DIR" Schema="CNJSB01" store:Type="Tables" />
+          <EntitySet Name="TB_SYS_LOG" EntityType="Self.TB_SYS_LOG" Schema="CNJSB01" store:Type="Tables" />
+          <EntitySet Name="TB_SYS_ROLE" EntityType="Self.TB_SYS_ROLE" Schema="CNJSB01" store:Type="Tables" />
+          <EntitySet Name="TB_USER_ROLE" EntityType="Self.TB_USER_ROLE" Schema="CNJSB01" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="OraDb104" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="TB_ADMIN_USER" EntityType="Model.TB_ADMIN_USER" />
+          <EntitySet Name="TB_ROLE_DIR" EntityType="Model.TB_ROLE_DIR" />
+          <EntitySet Name="TB_SYS_DIR" EntityType="Model.TB_SYS_DIR" />
+          <EntitySet Name="TB_SYS_LOG" EntityType="Model.TB_SYS_LOG" />
+          <EntitySet Name="TB_SYS_ROLE" EntityType="Model.TB_SYS_ROLE" />
+          <EntitySet Name="TB_USER_ROLE" EntityType="Model.TB_USER_ROLE" />
+        </EntityContainer>
+        <EntityType Name="TB_ADMIN_USER">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USER_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PASSWORD" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CN_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="STATUS" Type="Byte" Nullable="false" />
+          <Property Name="CREATEDATE" Type="DateTime" />
+          <Property Name="LOGINCOUNT" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="LASTLOGINDATE" Type="DateTime" />
+          <Property Name="SECURITYSTAMP" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USER_TYPE" Type="Byte" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TB_ROLE_DIR">
+          <Key>
+            <PropertyRef Name="ROLE_ID" />
+            <PropertyRef Name="DIR_ID" />
+          </Key>
+          <Property Name="ROLE_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DIR_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TB_SYS_DIR">
+          <Key>
+            <PropertyRef Name="DIR_ID" />
+          </Key>
+          <Property Name="DIR_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PARENT_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ENABLED" Type="Byte" Nullable="false" />
+          <Property Name="DIR_VIEW" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DIR_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DIR_URL" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DIR_TYPE" Type="Byte" Nullable="false" />
+          <Property Name="MEMO" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SORT_NO" Type="Int16" />
+          <Property Name="DELETED" Type="Byte" Nullable="false" />
+          <Property Name="IS_GROUP" Type="Decimal" Precision="38" Scale="0" />
+        </EntityType>
+        <EntityType Name="TB_SYS_LOG">
+          <Key>
+            <PropertyRef Name="LOGID" />
+          </Key>
+          <Property Name="LOGID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USERID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FUNNAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LOGTIME" Type="DateTime" />
+          <Property Name="OPERATION" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MEMO1" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="MEMO2" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="URL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IP" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BIZID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BIZCODE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TB_SYS_ROLE">
+          <Key>
+            <PropertyRef Name="ROLE_ID" />
+          </Key>
+          <Property Name="ROLE_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ROLE_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ROLE_TYPE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DESCR" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IS_ADMIN" Type="Byte" Nullable="false" />
+          <Property Name="STATUS" Type="Byte" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TB_USER_ROLE">
+          <Key>
+            <PropertyRef Name="ROLE_ID" />
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="ROLE_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USER_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="OraDb104">
+          <EntitySetMapping Name="TB_ADMIN_USER">
+            <EntityTypeMapping TypeName="Model.TB_ADMIN_USER">
+              <MappingFragment StoreEntitySet="TB_ADMIN_USER">
+                <ScalarProperty Name="USER_TYPE" ColumnName="USER_TYPE" />
+                <ScalarProperty Name="SECURITYSTAMP" ColumnName="SECURITYSTAMP" />
+                <ScalarProperty Name="LASTLOGINDATE" ColumnName="LASTLOGINDATE" />
+                <ScalarProperty Name="LOGINCOUNT" ColumnName="LOGINCOUNT" />
+                <ScalarProperty Name="CREATEDATE" ColumnName="CREATEDATE" />
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+                <ScalarProperty Name="CN_NAME" ColumnName="CN_NAME" />
+                <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+                <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TB_ROLE_DIR">
+            <EntityTypeMapping TypeName="Model.TB_ROLE_DIR">
+              <MappingFragment StoreEntitySet="TB_ROLE_DIR">
+                <ScalarProperty Name="DIR_ID" ColumnName="DIR_ID" />
+                <ScalarProperty Name="ROLE_ID" ColumnName="ROLE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TB_SYS_DIR">
+            <EntityTypeMapping TypeName="Model.TB_SYS_DIR">
+              <MappingFragment StoreEntitySet="TB_SYS_DIR">
+                <ScalarProperty Name="IS_GROUP" ColumnName="IS_GROUP" />
+                <ScalarProperty Name="DELETED" ColumnName="DELETED" />
+                <ScalarProperty Name="SORT_NO" ColumnName="SORT_NO" />
+                <ScalarProperty Name="MEMO" ColumnName="MEMO" />
+                <ScalarProperty Name="DIR_TYPE" ColumnName="DIR_TYPE" />
+                <ScalarProperty Name="DIR_URL" ColumnName="DIR_URL" />
+                <ScalarProperty Name="DIR_NAME" ColumnName="DIR_NAME" />
+                <ScalarProperty Name="DIR_VIEW" ColumnName="DIR_VIEW" />
+                <ScalarProperty Name="ENABLED" ColumnName="ENABLED" />
+                <ScalarProperty Name="PARENT_ID" ColumnName="PARENT_ID" />
+                <ScalarProperty Name="DIR_ID" ColumnName="DIR_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TB_SYS_LOG">
+            <EntityTypeMapping TypeName="Model.TB_SYS_LOG">
+              <MappingFragment StoreEntitySet="TB_SYS_LOG">
+                <ScalarProperty Name="BIZCODE" ColumnName="BIZCODE" />
+                <ScalarProperty Name="BIZID" ColumnName="BIZID" />
+                <ScalarProperty Name="IP" ColumnName="IP" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="MEMO2" ColumnName="MEMO2" />
+                <ScalarProperty Name="MEMO1" ColumnName="MEMO1" />
+                <ScalarProperty Name="OPERATION" ColumnName="OPERATION" />
+                <ScalarProperty Name="LOGTIME" ColumnName="LOGTIME" />
+                <ScalarProperty Name="FUNNAME" ColumnName="FUNNAME" />
+                <ScalarProperty Name="USERID" ColumnName="USERID" />
+                <ScalarProperty Name="LOGID" ColumnName="LOGID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TB_SYS_ROLE">
+            <EntityTypeMapping TypeName="Model.TB_SYS_ROLE">
+              <MappingFragment StoreEntitySet="TB_SYS_ROLE">
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+                <ScalarProperty Name="IS_ADMIN" ColumnName="IS_ADMIN" />
+                <ScalarProperty Name="DESCR" ColumnName="DESCR" />
+                <ScalarProperty Name="ROLE_TYPE" ColumnName="ROLE_TYPE" />
+                <ScalarProperty Name="ROLE_NAME" ColumnName="ROLE_NAME" />
+                <ScalarProperty Name="ROLE_ID" ColumnName="ROLE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TB_USER_ROLE">
+            <EntityTypeMapping TypeName="Model.TB_USER_ROLE">
+              <MappingFragment StoreEntitySet="TB_USER_ROLE">
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="ROLE_ID" ColumnName="ROLE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
