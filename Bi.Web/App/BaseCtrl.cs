@@ -14,7 +14,7 @@ using System.Web.Mvc;
 
 namespace Bi.Web.App
 {
-    public class BaseCtrl: Controller
+    public class BaseCtrl : Controller
     {/// <summary>
      /// web.config 自定义配置
      /// </summary>
@@ -40,7 +40,7 @@ namespace Bi.Web.App
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             base.OnActionExecuted(filterContext);
-            //BuildMenu();
+            BuildMenu();
             //BuildPathWord();
         }
 
@@ -82,35 +82,37 @@ namespace Bi.Web.App
         {
             var user = WebHelper.IdentityUser;
 
-            if (user.Rights.Count == 0)
-            {
-                ViewData[ViewBagKey.Menu_Key] = "<div class=\"left\" id=\"cssmenu\"><ul class=\"menu\"><li class=\"has-sub\"><a href='#'><span>无权限访问</span></a></li></u></div>";
-                return;
-            }
+            //if (user.Rights.Count == 0)
+            //{
+            //    ViewData[ViewBagKey.Menu_Key] = "<div class=\"left\" id=\"cssmenu\"><ul class=\"menu\"><li class=\"has-sub\"><a href='#'><span>无权限访问</span></a></li></u></div>";
+            //    return;
+            //}
 
             IList<TB_SYS_DIR> sysDirs = new SysCaching().GetUsableDirs();
 
-            StringBuilder menuHtml = new StringBuilder("<div class=\"left\" id=\"cssmenu\"><ul class=\"menu\">");
+            //StringBuilder menuHtml = new StringBuilder("<div class=\"left\" id=\"cssmenu\"><ul class=\"menu\">");
+            StringBuilder menuHtml = new StringBuilder();
 
             List<TB_SYS_DIR> topDirs = sysDirs.ToList().FindAll(it => it.PARENT_ID == RootDir).OrderBy(it => it.SORT_NO).ToList();
+
             if (topDirs.Count == 0)
                 return;
 
             foreach (TB_SYS_DIR topDir in topDirs)
             {
                 //如果用户权限目录中包括topDir所指目录
-                KeyValuePair<string, string> dir = new KeyValuePair<string, string>(topDir.DIR_ID.ToString(), topDir.DIR_URL.ToLower());
-                if (user.Rights.Contains(dir))
-                {
-                    menuHtml.Append("<li class=\"has-sub\"><a href='#'><span>" + topDir.DIR_NAME + "</span></a>");
+                //KeyValuePair<string, string> dir = new KeyValuePair<string, string>(topDir.DIR_ID.ToString(), topDir.DIR_URL.ToLower());
+                //if (user.Rights.Contains(dir))
+                //{
+                //menuHtml.Append("<li class=\"has-sub\"><a href='#'><span>" + topDir.DIR_NAME + "</span></a>");
 
-                    menuHtml.Append(BuildSubMenus(sysDirs, topDir.DIR_ID, user));
 
-                    menuHtml.Append("</li>");
-                }
+                menuHtml.Append(BuildSubMenus(sysDirs, topDir, user));
+
+                //}
             }
 
-            menuHtml.Append("</ul></div>");
+            //menuHtml.Append("</ul></div>");
 
             ViewData[ViewBagKey.Menu_Key] = menuHtml.ToString();
         }
@@ -121,53 +123,51 @@ namespace Bi.Web.App
         /// <param name="sysDirs">所有目录数据</param>
         /// <param name="PARENT_ID">父目录ID</param>
         /// <param name="parentNode">父目录结点</param>
-        private string BuildSubMenus(IList<TB_SYS_DIR> sysDirs, string PARENT_ID, IdentityUser user)
+        private string BuildSubMenus(IList<TB_SYS_DIR> sysDirs, TB_SYS_DIR parentDir, IdentityUser user)
         {
-            List<TB_SYS_DIR> subDirs = sysDirs.Where(it => it.PARENT_ID == PARENT_ID && (it.DIR_TYPE == 1 || it.DIR_TYPE == 4)).OrderBy(it => it.SORT_NO).ToList();
+            StringBuilder menuHtml = new StringBuilder();
+
+            List<TB_SYS_DIR> subDirs = sysDirs.Where(it => it.PARENT_ID == parentDir.DIR_ID && (it.D_LEVEL < 3)).OrderBy(it => it.SORT_NO).ToList();
 
             if (subDirs.Count == 0)
-                return "";
-
-            StringBuilder menuHtml = new StringBuilder("<ul>");
-
-            foreach (TB_SYS_DIR dir in subDirs)
             {
-                //如果用户权限目录中包括dir所指目录
-                KeyValuePair<string, string> d = new KeyValuePair<string, string>(dir.DIR_ID.ToString(), dir.DIR_URL.ToLower());
-                if (user.Rights.Contains(d))
+                if (parentDir.D_LEVEL == 1)
                 {
-                    if (dir.DIR_TYPE == 4)
-                    {
-                        if (dir.IS_GROUP == 1)
-                        {
-                            menuHtml.Append("<li style='border-top:solid 1px #e2e2e2'><a href='#' onclick=\"ShowWinPage('" + dir.DIR_URL + "')\" style=\"cursor:pointer\">" + dir.DIR_NAME + "</a><span class=\"hover\"></span>");
-                        }
-                        else
-                        {
-                            menuHtml.Append("<li><a href='#' onclick=\"ShowWinPage('" + dir.DIR_URL + "')\" style=\"cursor:pointer\">" + dir.DIR_NAME + "</a><span class=\"hover\"></span>");
-                        }
-
-                    }
-                    else
-                    {
-                        if (dir.IS_GROUP == 1)
-                        {
-                            menuHtml.Append("<li style='border-top:solid 1px #e2e2e2'><a href=\"" + dir.DIR_URL + "\" >" + dir.DIR_NAME + "</a><span class=\"hover\"></span>");
-                        }
-                        else
-                        {
-                            menuHtml.Append("<li><a href=\"" + dir.DIR_URL + "\" >" + dir.DIR_NAME + "</a><span class=\"hover\"></span>");
-                        }
-                    }
-                    menuHtml.Append(BuildSubMenus(sysDirs, dir.DIR_ID, user));
-
-                    menuHtml.Append("</li>");
+                    menuHtml.Append("<li><a href=\"" + parentDir.DIR_URL + "\"><i class=\"" + parentDir.MEMO + "\"></i>" + parentDir.DIR_NAME + "</a></li>");
+                    return menuHtml.ToString();
+                }
+                else
+                {
+                    menuHtml.Append("<li><a href=\"" + parentDir.DIR_URL + "\" >" + parentDir.DIR_NAME + "</a></li>");
+                    return menuHtml.ToString();
                 }
             }
+            else
+            {
+                menuHtml.Append("<li class=\"sub open active\">" +
+                                            "<a href = \"javascript:;\" >" +
+                                                "<i class=\"" + parentDir.MEMO + "\"></i>" + parentDir.DIR_NAME + "<div class=\"pull-right\"><span class=\"caret\"></span></div>" +
+                                            "</a>" +
+                                            "<ul class=\"templatemo-submenu\">");
 
-            menuHtml.Append("</ul>");
+                foreach (TB_SYS_DIR dir in subDirs)
+                {
+                    //如果用户权限目录中包括dir所指目录
+                    //KeyValuePair<string, string> d = new KeyValuePair<string, string>(dir.DIR_ID.ToString(), dir.DIR_URL.ToLower());
+                    //if (user.Rights.Contains(d))
+                    //{
+                    //menuHtml.Append("<li><a href=\"" + dir.DIR_URL + "\" >" + dir.DIR_NAME + "</a>");
 
-            return menuHtml.ToString();
+                    menuHtml.Append(BuildSubMenus(sysDirs, dir, user));
+
+                    //menuHtml.Append("</li>");
+                    //}
+                }
+
+                menuHtml.Append("</ul></li>");
+
+                return menuHtml.ToString();
+            }
         }
 
         /// <summary>

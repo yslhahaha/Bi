@@ -43,6 +43,7 @@
           <Property Name="SORT_NO" Type="number" Precision="5" Scale="0" />
           <Property Name="DELETED" Type="number" Precision="2" Scale="0" Nullable="false" />
           <Property Name="IS_GROUP" Type="number" Precision="38" Scale="0" />
+          <Property Name="D_LEVEL" Type="number" Precision="38" Scale="0" />
         </EntityType>
         <EntityType Name="TB_SYS_LOG">
           <Key>
@@ -93,11 +94,11 @@
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="OraDb104" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="TB_ADMIN_USER" EntityType="Model.TB_ADMIN_USER" />
-          <EntitySet Name="TB_ROLE_DIR" EntityType="Model.TB_ROLE_DIR" />
-          <EntitySet Name="TB_SYS_DIR" EntityType="Model.TB_SYS_DIR" />
           <EntitySet Name="TB_SYS_LOG" EntityType="Model.TB_SYS_LOG" />
           <EntitySet Name="TB_SYS_ROLE" EntityType="Model.TB_SYS_ROLE" />
           <EntitySet Name="TB_USER_ROLE" EntityType="Model.TB_USER_ROLE" />
+          <EntitySet Name="TB_ROLE_DIR" EntityType="Model.TB_ROLE_DIR" />
+          <EntitySet Name="TB_SYS_DIR" EntityType="Model.TB_SYS_DIR" />
         </EntityContainer>
         <EntityType Name="TB_ADMIN_USER">
           <Key>
@@ -113,30 +114,6 @@
           <Property Name="LASTLOGINDATE" Type="DateTime" />
           <Property Name="SECURITYSTAMP" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="USER_TYPE" Type="Byte" Nullable="false" />
-        </EntityType>
-        <EntityType Name="TB_ROLE_DIR">
-          <Key>
-            <PropertyRef Name="ROLE_ID" />
-            <PropertyRef Name="DIR_ID" />
-          </Key>
-          <Property Name="ROLE_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DIR_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="TB_SYS_DIR">
-          <Key>
-            <PropertyRef Name="DIR_ID" />
-          </Key>
-          <Property Name="DIR_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PARENT_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ENABLED" Type="Byte" Nullable="false" />
-          <Property Name="DIR_VIEW" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DIR_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DIR_URL" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="DIR_TYPE" Type="Byte" Nullable="false" />
-          <Property Name="MEMO" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="SORT_NO" Type="Int16" />
-          <Property Name="DELETED" Type="Byte" Nullable="false" />
-          <Property Name="IS_GROUP" Type="Decimal" Precision="38" Scale="0" />
         </EntityType>
         <EntityType Name="TB_SYS_LOG">
           <Key>
@@ -173,6 +150,31 @@
           <Property Name="ROLE_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="USER_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="TB_ROLE_DIR">
+          <Key>
+            <PropertyRef Name="ROLE_ID" />
+            <PropertyRef Name="DIR_ID" />
+          </Key>
+          <Property Name="ROLE_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DIR_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TB_SYS_DIR">
+          <Key>
+            <PropertyRef Name="DIR_ID" />
+          </Key>
+          <Property Name="DIR_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PARENT_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ENABLED" Type="Byte" Nullable="false" />
+          <Property Name="DIR_VIEW" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DIR_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DIR_URL" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DIR_TYPE" Type="Byte" Nullable="false" />
+          <Property Name="MEMO" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SORT_NO" Type="Int16" />
+          <Property Name="DELETED" Type="Byte" Nullable="false" />
+          <Property Name="IS_GROUP" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="D_LEVEL" Type="Decimal" Precision="38" Scale="0" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -192,31 +194,6 @@
                 <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
                 <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
                 <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TB_ROLE_DIR">
-            <EntityTypeMapping TypeName="Model.TB_ROLE_DIR">
-              <MappingFragment StoreEntitySet="TB_ROLE_DIR">
-                <ScalarProperty Name="DIR_ID" ColumnName="DIR_ID" />
-                <ScalarProperty Name="ROLE_ID" ColumnName="ROLE_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TB_SYS_DIR">
-            <EntityTypeMapping TypeName="Model.TB_SYS_DIR">
-              <MappingFragment StoreEntitySet="TB_SYS_DIR">
-                <ScalarProperty Name="IS_GROUP" ColumnName="IS_GROUP" />
-                <ScalarProperty Name="DELETED" ColumnName="DELETED" />
-                <ScalarProperty Name="SORT_NO" ColumnName="SORT_NO" />
-                <ScalarProperty Name="MEMO" ColumnName="MEMO" />
-                <ScalarProperty Name="DIR_TYPE" ColumnName="DIR_TYPE" />
-                <ScalarProperty Name="DIR_URL" ColumnName="DIR_URL" />
-                <ScalarProperty Name="DIR_NAME" ColumnName="DIR_NAME" />
-                <ScalarProperty Name="DIR_VIEW" ColumnName="DIR_VIEW" />
-                <ScalarProperty Name="ENABLED" ColumnName="ENABLED" />
-                <ScalarProperty Name="PARENT_ID" ColumnName="PARENT_ID" />
-                <ScalarProperty Name="DIR_ID" ColumnName="DIR_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -257,7 +234,33 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="TB_ROLE_DIR">
+            <EntityTypeMapping TypeName="Model.TB_ROLE_DIR">
+              <MappingFragment StoreEntitySet="TB_ROLE_DIR">
+                <ScalarProperty Name="DIR_ID" ColumnName="DIR_ID" />
+                <ScalarProperty Name="ROLE_ID" ColumnName="ROLE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TB_SYS_DIR">
+            <EntityTypeMapping TypeName="Model.TB_SYS_DIR">
+              <MappingFragment StoreEntitySet="TB_SYS_DIR">
+                <ScalarProperty Name="D_LEVEL" ColumnName="D_LEVEL" />
+                <ScalarProperty Name="IS_GROUP" ColumnName="IS_GROUP" />
+                <ScalarProperty Name="DELETED" ColumnName="DELETED" />
+                <ScalarProperty Name="SORT_NO" ColumnName="SORT_NO" />
+                <ScalarProperty Name="MEMO" ColumnName="MEMO" />
+                <ScalarProperty Name="DIR_TYPE" ColumnName="DIR_TYPE" />
+                <ScalarProperty Name="DIR_URL" ColumnName="DIR_URL" />
+                <ScalarProperty Name="DIR_NAME" ColumnName="DIR_NAME" />
+                <ScalarProperty Name="DIR_VIEW" ColumnName="DIR_VIEW" />
+                <ScalarProperty Name="ENABLED" ColumnName="ENABLED" />
+                <ScalarProperty Name="PARENT_ID" ColumnName="PARENT_ID" />
+                <ScalarProperty Name="DIR_ID" ColumnName="DIR_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

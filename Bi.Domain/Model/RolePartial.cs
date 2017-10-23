@@ -15,31 +15,11 @@ namespace Bi.Domain
         #region 辅助View显示
 
         /// <summary>
-        /// 角色列表（键值对）
+        /// 角色对应的目录ID
         /// </summary>
-        public List<TB_SYS_ROLE> Roles { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<string> RoleTypes { get; set; }
+        public List<string> DirIds { get; set; }
 
         #endregion
-
-        /// <summary>
-        ///为【编辑用户】页面准备角色数据。
-        /// </summary>
-        public void FillRoleTypes()
-        {
-            foreach (TB_SYS_ROLE role in Roles)
-            {
-                if (!RoleTypes.Contains(role.ROLE_TYPE))
-                {
-                    RoleTypes.Add(role.ROLE_TYPE);
-                }
-            }
-        }
-
 
     }
 }

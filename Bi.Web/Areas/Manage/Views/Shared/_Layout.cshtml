@@ -37,7 +37,7 @@
                         <span class="btn btn-default">Go</span>
                     </form>
                 </li>
-                <li><a href="#"><i class="fa fa-home"></i>数据大盘</a></li>
+                @*<li><a href="#"><i class="fa fa-home"></i>数据大盘</a></li>
                 <li class="sub open active">
                     <a href="javascript:;">
                         <i class="fa fa-database"></i> 系统管理 <div class="pull-right"><span class="caret"></span></div>
@@ -53,7 +53,8 @@
                 <li><a href="data-visualization.html"><i class="fa fa-cubes"></i><span class="badge pull-right">9</span>实时业绩数据</a></li>
                 <li><a href="maps.html"><i class="fa fa-map-marker"></i><span class="badge pull-right">42</span>数据分析</a></li>
                 <li><a href="tables.html"><i class="fa fa-users"></i><span class="badge pull-right">NEW</span>团队/系统数据查询</a></li>
-                <li><a href="preferences.html"><i class="fa fa-cog"></i>更换视角</a></li>
+                <li><a href="preferences.html"><i class="fa fa-cog"></i>更换视角</a></li>*@
+                @Html.Raw(ViewData[Bi.Utility.ViewBagKey.Menu_Key])
                 <li><a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-sign-out"></i>退出系统</a></li>
             </ul>
         </div><!--/.navbar-collapse -->

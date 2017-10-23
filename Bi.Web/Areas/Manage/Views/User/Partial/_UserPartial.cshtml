@@ -8,36 +8,21 @@
                 switch (Model.USER_TYPE)
                 {
                     case 0:
-                        <label class="btn btn-primary">
-                            @Html.RadioButton("rbUserType", "1", false)<text>后台管理</text>
-                        </label>
                         <label class="btn btn-primary active">
-                            @Html.RadioButton("rbUserType", "0", true)<text>KM用户</text>
+                            <text>KM用户</text>
                         </label>
-                        <label class="btn btn-primary">
-                            @Html.RadioButton("rbUserType", "2", false)<text>平台用户</text>
-                        </label>
+                        <script>
+                            $(function () { $(".pwd").attr("disabled", "disabled"); });
+                        </script>
                         break;
                     case 1:
                         <label class="btn btn-primary active">
-                            @Html.RadioButton("rbUserType", "1", true)<text>后台管理</text>
-                        </label>
-                        <label class="btn btn-primary">
-                            @Html.RadioButton("rbUserType", "0", false)<text>KM用户</text>
-                        </label>
-                        <label class="btn btn-primary">
-                            @Html.RadioButton("rbUserType", "2", false)<text>平台用户</text>
+                            <text>后台管理</text>
                         </label>
                         break;
                     case 2:
-                        <label class="btn btn-primary">
-                            @Html.RadioButton("rbUserType", "1", false)<text>后台管理</text>
-                        </label>
-                        <label class="btn btn-primary">
-                            @Html.RadioButton("rbUserType", "0", false)<text>KM用户</text>
-                        </label>
                         <label class="btn btn-primary active">
-                            @Html.RadioButton("rbUserType", "2", true)<text>平台用户</text>
+                            <text>平台用户</text>
                         </label>
                         break;
                 }
@@ -83,8 +68,7 @@
     <div class="col-md-12 margin-bottom-15">
         @Html.LabelFor(m => m.USER_NAME, "用户编号", new { @class = "control-label" })
         @Html.TextBoxFor(m => m.USER_NAME, new Dictionary<string, object>() { { "class", "form-control IsRequired IsPositiveNum2" }
-       , { "title", "用户编号" }
-       , { "maxlength", "50" } })
+       , { "title", "用户编号" } , { "maxlength", "50" } })
         @Html.ValidationMessageFor(m => m.USER_NAME)
     </div>
 </div>
@@ -142,7 +126,7 @@
     </div>
     <script>
         $(function () {
-            var url = "/Manage/Sys/GetRoles";
+            var url = "/manage/role/getlist";
 
             $.ajax({
                 cache: false,

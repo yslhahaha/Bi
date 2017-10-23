@@ -64,20 +64,25 @@ namespace Bi.Biz.Service
                 if (user == null)
                     throw new Exception(userDto.USER_ID + " 不存在");
 
-                user.USER_NAME = userDto.USER_NAME;
+                if (userDto.USER_TYPE != (short)UserType.KM_USER)
+                {
+                    user.PASSWORD = userDto.PASSWORD;
+                }
+                else
+                {
+                    user.PASSWORD = "";
+                }
+
+                user.CN_NAME = userDto.CN_NAME;
                 user.STATUS = userDto.STATUS;
                 user.SECURITYSTAMP = Guid.NewGuid().ToString();
 
-                //user.TB_SYS_ROLE.Clear();
+                _db.TB_USER_ROLE.RemoveRange(_db.TB_USER_ROLE.Where(it => it.USER_ID == userDto.USER_ID));
 
-                //string[] ROLE_IDs = userDto.TB_SYS_ROLE.Select(it => it.ROLE_ID).ToArray();
-
-                //IList<TB_SYS_ROLE> roleList = _db.TB_SYS_ROLE.Where(it => ROLE_IDs.Contains(it.ROLE_ID)).ToList();
-
-                //for (int i = 0; i < roleList.Count; i++)
-                //{
-                //    user.TB_SYS_ROLE.Add(roleList[i]);
-                //}
+                foreach (var role in userDto.UserRole)
+                {
+                    _db.TB_USER_ROLE.Add(new TB_USER_ROLE() { USER_ID = role.USER_ID, ROLE_ID = role.ROLE_ID });
+                }
 
                 _db.TB_SYS_LOG.Add(log);
 
@@ -87,36 +92,15 @@ namespace Bi.Biz.Service
             }
         }
 
-        public bool UpdatePwd(TB_ADMIN_USER userDto, TB_SYS_LOG log)
-        {
-            if (userDto == null)
-                throw new ArgumentNullException("TB_ADMIN_USER");
-
-            using (OraDb104 _db = new OraDb104())
-            {
-                List<string> sqls = new List<string>();
-
-                sqls.Add(@"UPDATE TB_ADMIN_USER
-                               SET PASSWORD = '" + userDto.PASSWORD + "', SECURITYSTAMP = '" + Guid.NewGuid().ToString() + @"'
-                             WHERE USER_ID = '" + userDto.USER_ID + "'");
-
-                sqls.Add(_db.CreateLogSql(log));
-
-                var flag = _db.ExecuteNonQueryTran(CommandType.Text, sqls);
-
-                if (flag) return true;
-
-                return false;
-            }
-        }
-
         public bool DeleteUser(string userId, TB_SYS_LOG log)
         {
+            throw new ArgumentNullException("userDto");
+
             using (OraDb104 _db = new OraDb104())
             {
                 List<string> sqls = new List<string>();
 
-                sqls.Add("UPDATE TB_ADMIN_USER SET STATUS = " + (byte)UserStatus.DISABLE + " WHERE USER_ID = '" + userId + "'");
+                sqls.Add("UPDATE TB_ADMIN_USER SET STATUS = " + (short)UserStatus.DISABLE + " WHERE USER_ID = '" + userId + "'");
 
                 sqls.Add(_db.CreateLogSql(log));
 
@@ -132,7 +116,7 @@ namespace Bi.Biz.Service
         {
             using (OraDb104 _db = new OraDb104())
             {
-                string sql = @"SELECT *
+                string sql = @"SELECT U.*,R.*
                                       FROM TB_ADMIN_USER U
                                       LEFT JOIN TB_USER_ROLE UR
                                         ON U.USER_ID = UR.USER_ID
@@ -164,7 +148,7 @@ namespace Bi.Biz.Service
                                                                                             "IS_ADMIN",
                                                                                             "STATUS");
 
-                user.Roles = tbRoles.AsEnumerable().Select(r => new TB_SYS_ROLE()
+                user.Roles = tbRoles.AsEnumerable().Where(it => it["ROLE_ID"] != null && it["ROLE_ID"].ToString() != "").Select(r => new TB_SYS_ROLE()
                 {
                     ROLE_ID = r["ROLE_ID"].ToString(),
                     ROLE_NAME = r["ROLE_NAME"].ToString(),
@@ -214,8 +198,10 @@ namespace Bi.Biz.Service
         {
             using (OraDb104 _db = new OraDb104())
             {
-
                 var role = _db.TB_SYS_ROLE.Where(p => p.ROLE_ID == id).FirstOrDefault();
+
+                if (role != null)
+                    role.DirIds = _db.TB_ROLE_DIR.Where(d => d.ROLE_ID == role.ROLE_ID).Select(it => it.DIR_ID).ToList();
 
                 return role;
             }
@@ -263,8 +249,16 @@ namespace Bi.Biz.Service
             {
                 TB_SYS_ROLE role = roleDto;
 
+                foreach (string dirId in roleDto.DirIds)
+                {
+                    TB_ROLE_DIR rd = new TB_ROLE_DIR() { DIR_ID = dirId, ROLE_ID = role.ROLE_ID };
+                    _db.TB_ROLE_DIR.Add(rd);
+                }
+
                 _db.TB_SYS_ROLE.Add(role);
                 _db.TB_SYS_LOG.Add(log);
+
+                _db.SaveChanges();
 
                 return true;
             }
@@ -282,11 +276,21 @@ namespace Bi.Biz.Service
                 if (role == null)
                     throw new Exception(roleDto.ROLE_NAME + " 不存在");
 
+                var delRoleDirsQuery = _db.TB_ROLE_DIR.Where(it => it.ROLE_ID == roleDto.ROLE_ID);
+
+                _db.TB_ROLE_DIR.RemoveRange(delRoleDirsQuery);
+
                 role.ROLE_NAME = roleDto.ROLE_NAME;
                 role.DESCR = roleDto.DESCR;
                 role.STATUS = roleDto.STATUS;
                 role.IS_ADMIN = roleDto.IS_ADMIN;
                 role.ROLE_TYPE = roleDto.ROLE_TYPE;
+
+                foreach (string dirId in roleDto.DirIds)
+                {
+                    TB_ROLE_DIR rd = new TB_ROLE_DIR() { DIR_ID = dirId, ROLE_ID = role.ROLE_ID };
+                    _db.TB_ROLE_DIR.Add(rd);
+                }
 
                 _db.TB_SYS_LOG.Add(log);
 
@@ -393,7 +397,7 @@ namespace Bi.Biz.Service
             }
         }
 
-        public bool Create(TB_SYS_DIR dirDto, TB_SYS_LOG log)
+        public bool CreateDir(TB_SYS_DIR dirDto, TB_SYS_LOG log)
         {
             if (dirDto == null)
                 throw new ArgumentNullException("dirDTO");
@@ -405,11 +409,13 @@ namespace Bi.Biz.Service
                 _db.TB_SYS_DIR.Add(dir);
                 _db.TB_SYS_LOG.Add(log);
 
+                _db.SaveChanges();
+
                 return true;
             }
         }
 
-        public bool Update(TB_SYS_DIR dirDto, TB_SYS_LOG log)
+        public bool UpdateDir(TB_SYS_DIR dirDto, TB_SYS_LOG log)
         {
             if (dirDto == null)
                 throw new ArgumentNullException("dirDto");
@@ -430,6 +436,7 @@ namespace Bi.Biz.Service
                 dir.IS_GROUP = dirDto.IS_GROUP;
                 dir.DIR_URL = dirDto.DIR_URL;
                 dir.DIR_VIEW = dirDto.DIR_VIEW;
+                dir.D_LEVEL = dirDto.D_LEVEL;
 
                 _db.TB_SYS_LOG.Add(log);
 
@@ -439,7 +446,7 @@ namespace Bi.Biz.Service
             }
         }
 
-        public bool Delete(string id, TB_SYS_LOG log)
+        public bool DeleteDir(string id, TB_SYS_LOG log)
         {
             using (OraDb104 _db = new OraDb104())
             {

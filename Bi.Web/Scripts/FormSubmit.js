@@ -39,16 +39,23 @@ function FormSubmitABAC(btn, form, url, msg, reset, beforeFun, afterFun) {
 }
 
 function ShowMsg(isOk, msg) {
+    $("#showMsg").remove();
     if (isOk == "ok") {
         $('#msgArea').after(
             '<div id="showMsg" role="alert" class="col-md-12 margin-bottom-15 alert alert-success glyphicon glyphicon-ok">' +
               '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
-              '&nbsp;<strong>已完成，</strong>' + msg + '。' + '</div>');
+              '&nbsp;<strong>操作成功，</strong>' + msg + '。' + '</div>');
         setTimeout(function () {
             $('#showMsg').remove();
         }, 5000);
     } else {
-
+        $('#msgArea').after(
+            '<div id="showMsg" style="margin-top:5px;" role="alert" class="col-md-12 margin-bottom-15 alert alert-warning alert-dismissible glyphicon glyphicon-alert">' +
+              '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
+              '&nbsp;<strong>操作提示：</strong>' + isOk + msg + '。' + '</div>');
+        setTimeout(function () {
+            $('#showMsg').remove();
+        }, 5000);
     }
 }
 
@@ -81,21 +88,41 @@ function Loading(isShow) {
     }
 }
 
-//Ajax请求
-function AjaxRequest(Action, parms, afterFun) {
+function AddLoading(obj) {
+    if (obj)
+        $(obj).html("<img id='imgLoading' src='/content/images/loader.gif' />");
+    else
+        $("#imgLoading").remove();
+}
+
+//Query页面，Ajax操作函数，
+//返回结果（删除，锁定，可用，审核，退审等功能）
+//url：ajax请求的Url，sMsg：操作成功后的显示信息，obj：操作控件
+function DoAjaxAction(url, sMsg, grid) {
     $.ajax({
-        type: "POST", //调用Action使用Post方式请求
-        contentType: "application/json;charset=utf-8", //Action 会返回Json类型
-        url: Action, //调用Action    /Manage/User/Create
-        data: parms, //参数 {"taslyid":"AT1141","password":"123456"}
-        dataType: 'json',
-        beforeSend: function (x) { x.setRequestHeader("Content-Type", "application/json; charset=utf-8"); },
-        error: function (xhr, status, error) {
-            var errs = ParseExceptionMsg(xhr); //Pub.js
-            ShowMsgDialog(errs, "no", false);
+        type: "Post",
+        url: url,
+        cache: false,
+        beforeSend: function () {
+            Loading(true);
         },
-        success: function (result) {
-            afterFun(result);
+        error: function (xhr, status, error) {
+            var jsonValue = $.parseJSON(xhr.responseText)
+            //alert(jsonValue.ErrorMessage);
+            Loading(false);
+            ShowMsg(jsonValue.ErrorMessage, " 操作失败");
+        },
+        success: function (success) {
+            Loading(false);
+            if (success == "ok") {
+                ShowMsg(success, sMsg);
+                $(grid).bs_grid('displayGrid', false);
+            } else {
+                ShowErrorsMsgDialog(success, "", "");
+            }
+        },
+        complete: function () {
+            Loading(false);
         }
     });
 }

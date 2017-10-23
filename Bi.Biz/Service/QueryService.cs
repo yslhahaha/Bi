@@ -132,28 +132,27 @@ namespace Bi.Biz.Service
         private void CreateWhere(FilterRules.Condition condi, string group)
         {
 
-            if (condi.field.IndexOf("时间") > -1 || condi.field.IndexOf("日期") > -1)
+            if (condi.field.IndexOf("时间") > -1 || condi.field.IndexOf("日期") > -1 || condi.filterType == "date")
             {
-
-                condi.field = "to_char(" + condi.field + ",'yyyy-mm-dd hh24:mi:ss')";
+                condi.filterValue = "TO_DATE(" + condi.filterValue + ",'yyyy-MM-dd HH24:mi:ss')";
 
                 //匹配相应的操作
                 switch (condi.operater)
                 {
                     case "equal":
-                        Sql.Append(" " + group + " " + condi.field + " = '" + condi.filterValue + "'");
+                        Sql.Append(" " + group + " " + condi.field + " = " + condi.filterValue);
                         break;
                     case "less":
-                        Sql.Append(" " + group + " " + condi.field + " < '" + condi.filterValue + "'");
+                        Sql.Append(" " + group + " " + condi.field + " < " + condi.filterValue);
                         break;
                     case "less_or_equal":
-                        Sql.Append(" " + group + " " + condi.field + " <= '" + condi.filterValue + "'");
+                        Sql.Append(" " + group + " " + condi.field + " <= " + condi.filterValue);
                         break;
                     case "greater":
-                        Sql.Append(" " + group + " " + condi.field + " > '" + condi.filterValue + "'");
+                        Sql.Append(" " + group + " " + condi.field + " > " + condi.filterValue);
                         break;
                     case "greater_or_equal":
-                        Sql.Append(" " + group + " " + condi.field + " >= '" + condi.filterValue + "'");
+                        Sql.Append(" " + group + " " + condi.field + " >= " + condi.filterValue);
                         break;
                 }
             }
@@ -188,6 +187,12 @@ namespace Bi.Biz.Service
                         break;
                     case "not_in":
                         Sql.Append(" " + group + " " + condi.field + " not in ('" + condi.filterValue + "') ");
+                        break;
+                    case "is_null":
+                        Sql.Append(" " + group + " " + condi.field + " is null ");
+                        break;
+                    case "is_not_null":
+                        Sql.Append(" " + group + " " + condi.field + " is not null ");
                         break;
                 }
             }

@@ -26,11 +26,11 @@ namespace Bi.Utility
         /// <summary>
         /// 停用
         /// </summary>
-        YES = 0,
+        YES = 1,
         /// <summary>
         /// 启用
         /// </summary>
-        NO = 1,
+        NO = 0,
     }
     /// <summary>
     /// 用户状态
@@ -40,7 +40,7 @@ namespace Bi.Utility
         /// <summary>
         /// 停用
         /// </summary>
-        DISABLE = 0,
+        DISABLE = -1,
         /// <summary>
         /// 正常
         /// </summary>

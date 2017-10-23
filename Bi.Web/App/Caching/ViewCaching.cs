@@ -46,6 +46,8 @@ namespace Bi.Web.App.Caching
             }
 
             model.dsRows = sysViews.Tables[0].Select("ViewName = '" + model.ViewName + "'");
+
+            model.BuildColsAndFilter();
         }
     }
 }

@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Dirs";
+    Layout = "~/Areas/Manage/Views/Shared/_Layout.cshtml";
+}
+<h1>目录列表</h1>
+<div class="row">
+    <div class="col-md-12">
+        @RenderPage("~/Areas/Manage/Views/Shared/Uc/_GridPartial.cshtml")
+    </div>
+</div>
+<div class="row templatemo-form-buttons">
+    <div class="col-md-12">
+        <button id="btnRefresh" type="button" class="btn btn-primary" data-toggle="modal">刷新</button>
+        <button id="btnAdd" type="button" class="btn btn-primary" data-toggle="modal">新增</button>
+        <button id="btnEdit" type="button" class="btn btn-primary" data-toggle="modal">编辑</button>
+        <button id="btnDel" type="button" class="btn btn-primary" data-toggle="modal">删除</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15"><span id="msgArea"></span></div>
+</div>
+<script>
+    $("#btnAdd").on("click", function () {
+        window.location.href = "create";
+    });
+
+    $("#btnEdit").on("click", function () {
+        var id = $(gridId).bs_grid('selectedRows', 'get_ids');
+        if (id != "") window.location.href = "edit/" + id;
+        else ShowErrorsMsgDialog("请选择要编辑的记录。");
+    });
+
+    $("#btnDel").on("click", function () {
+        var id = $(gridId).bs_grid('selectedRows', 'get_ids');
+        DoAjaxAction("delete/" + id, "删除成功", $(gridId));
+    });
+
+</script>

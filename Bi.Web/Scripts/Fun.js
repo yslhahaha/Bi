@@ -1,4 +1,29 @@
-﻿//弹出窗口
+﻿function AjaxGetCall(url) {
+    $.ajax({
+        cache: false,
+        type: "GET",
+        url: url,
+        beforeSend: function () {
+            Loading(true);
+        },
+        success: function (res) {
+            Loading(false);
+            return res;
+        },
+        error: function (xhr, status, error) {
+            Loading(false);
+            var errs = ParseExceptionMsg(xhr);
+            ShowErrorsMsgDialog(errs, "no", false);
+        },
+        complete: function () {
+            Loading(false);
+        }
+    });
+}
+
+
+
+//弹出窗口
 function ClientWindow(params) {
     //打开方式：[Jdialog]、[模式对话框]
     this.open = (params.open || "Jdialog");
@@ -62,37 +87,6 @@ function IsJsonString(data) {
     else {
         return true;
     }
-}
-
-//Query页面，Ajax操作函数，
-//返回结果（删除，锁定，可用，审核，退审等功能）
-//url：ajax请求的Url，sMsg：操作成功后的显示信息，obj：操作控件
-function DoAjaxAction(url, sMsg, obj) {
-    $.ajax({
-        type: "Post",
-        url: url,
-        cache: false,
-        beforeSend: function () {
-            $(obj).attr("disabled", "disabled");
-            $("#imgLoading").css("display", "");
-        },
-        error: function (xhr, status, error) {
-            var jsonValue = $.parseJSON(xhr.responseText)
-            alert(jsonValue.ErrorMessage);
-        },
-        success: function (msg) {
-            if (msg == "ok") {
-                alert(sMsg);
-                ReloadGrid();
-            } else {
-                alert(msg);
-            }
-        },
-        complete: function () {
-            $(obj).attr("disabled", "");
-            $("#imgLoading").css("display", "none");
-        }
-    });
 }
 
 //千分位

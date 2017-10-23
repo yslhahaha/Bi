@@ -1,0 +1,211 @@
+﻿@model Bi.Domain.TB_SYS_DIR
+@Html.HiddenFor(m => m.DIR_ID)
+<div class="row">
+    <div class="col-md-6 margin-bottom-15">
+        <div class="btn-group" data-toggle="buttons">
+            @if (Model != null && Model.ENABLED == (byte)Bi.Utility.DirStatus.NORMAL)
+            {
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbIsEnable", "1", true)<text>启用</text>
+                </label>
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbIsEnable", "0", false)<text>停用</text>
+                </label>
+            }
+            else
+            {
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbIsEnable", "1", true)<text>启用</text>
+                </label>
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbIsEnable", "0", false)<text>停用</text>
+                </label>
+            }
+        </div>
+    </div>
+    <div class="col-md-6 margin-bottom-15">
+        <div class="btn-group" data-toggle="buttons">
+            @if (Model != null)
+            {
+                switch (Model.DIR_TYPE)
+                {
+                    case 0:
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbDirType", "1", false)<text>本页打开</text>
+                        </label>
+                        <label class="btn btn-primary active">
+                            @Html.RadioButton("rbDirType", "0", true)<text>新页打开</text>
+                        </label>
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbDirType", "2", false)<text>弹出窗口</text>
+                        </label>
+                        break;
+                    case 1:
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbDirType", "1", true)<text>本页打开</text>
+                        </label>
+                        <label class="btn btn-primary active">
+                            @Html.RadioButton("rbDirType", "0", false)<text>新页打开</text>
+                        </label>
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbDirType", "2", false)<text>弹出窗口</text>
+                        </label>
+                        break;
+                    case 2:
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbDirType", "1", false)<text>本页打开</text>
+                        </label>
+                        <label class="btn btn-primary active">
+                            @Html.RadioButton("rbDirType", "0", false)<text>新页打开</text>
+                        </label>
+                        <label class="btn btn-primary">
+                            @Html.RadioButton("rbDirType", "2", true)<text>弹出窗口</text>
+                        </label>
+                        break;
+                }
+            }
+            else
+            {
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbDirType", "1", true)<text>本页打开</text>
+                </label>
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbDirType", "0", false)<text>新页打开</text>
+                </label>
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbDirType", "2", false)<text>弹出窗口</text>
+                </label>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.DIR_NAME, "目录名称", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.DIR_NAME, new Dictionary<string, object>() { { "class", "form-control IsRequired" }
+       , { "title", "目录名称" } , { "maxlength", "100" } })
+        @Html.ValidationMessageFor(m => m.DIR_NAME)
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.DIR_URL, "目录地址", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.DIR_URL, new { @maxlength = "500", @class = "form-control IsRequired", @title = "目录地址" })
+        @Html.ValidationMessageFor(m => m.DIR_URL)
+    </div>
+</div>
+
+<div class="row ">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.SORT_NO, "排序", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.SORT_NO, new { @maxlength = "5", @class = "form-control", @title = "排序" })
+        @Html.ValidationMessageFor(m => m.SORT_NO)
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.DIR_VIEW, "视图", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.DIR_VIEW, new { @maxlength = "100", @class = "form-control", @title = "视图" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.MEMO, "图标", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.MEMO, new { @maxlength = "500", @class = "form-control", @title = "图标" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        <label for="roleType">上级目录</label>
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/treeview/bootstrap-treeview.css")" />
+        <script type="text/javascript" src="~/Scripts/treeview/bootstrap-treeview.js"></script>
+        <div id="tree"></div>
+        <input type="hidden" id="hidParentDirId" name="hidParentDirId" value="@(Model==null?"":Model.PARENT_ID)" />
+        <input type="hidden" id="hidDirLevel" name="hidDirLevel" value="@(Model==null?null:Model.D_LEVEL)" />
+        <script>
+            $(function () {
+                var url = "/App/Ajax/TreeCall.ashx?type=dir";
+
+                if ($("#hidParentDirId").val() != "") { url += "&dirId=" + $("#hidParentDirId").val(); }
+                if ($("#DIR_ID").val() != "") { url += "&curId=" + $("#DIR_ID").val(); }
+
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: url,
+                    beforeSend: function () {
+                        Loading(true);
+                    },
+                    success: function (res) {
+                        Loading(false);
+                        $('#tree').treeview({
+                            showCheckbox: true,
+                            selectable: false,
+                            data: eval("(" + res + ")"),
+                            onNodeChecked: function (event, data) {
+                                $('#tree').treeview('uncheckAll', { silent: true });
+                                $('#tree').treeview('checkNode', [data.nodeId, { silent: true }]);
+                                $('#tree').treeview('selectNode', [data.nodeId, { silent: true }]);
+                                $('#hidParentDirId').val(data.id);
+                                $('#hidDirLevel').val(data.level+1);
+                            },
+                            onNodeUnchecked: function (event, data) {
+                                $('#tree').treeview('uncheckNode', [data.nodeId, { silent: true }]);
+                                $('#tree').treeview('unselectNode', [data.nodeId, { silent: true }]);
+                                $('#hidParentDirId').val("");
+                                $('#hidDirLevel').val("");
+                            }
+                        });
+
+                        ExpendSelectedNode();
+                    },
+                    error: function (xhr, status, error) {
+                        Loading(false);
+                        var errs = ParseExceptionMsg(xhr);
+                        ShowErrorsMsgDialog(errs, "no", false);
+                    },
+                    complete: function () {
+                        Loading(false);
+                    }
+                });
+            });
+
+            function ExpendSelectedNode() {
+                var nodes = $('#tree').treeview('getSelected', null);
+                $.each(nodes, function (idx, node) {
+                    pNode = $('#tree').treeview('getParent', node);
+                    if (pNode.id && pNode.id != "@Bi.Utility.Pub.GetSysConfig().SysParam.RootDirID") {
+                        $('#tree').treeview('toggleNodeExpanded', [pNode.nodeId, { silent: true }]);
+                        ExpendNode(pNode);
+                    }
+                });
+            }
+
+            function ExpendNode(node) {
+                pNode = $('#tree').treeview('getParent', node);
+                if (pNode.id != "@Bi.Utility.Pub.GetSysConfig().SysParam.RootDirID") {
+                    $('#tree').treeview('toggleNodeExpanded', [pNode.nodeId, { silent: true }]);
+                    ExpendNode(pNode);
+                } else {
+                    return;
+                }
+            }
+
+        </script>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        <span id="msgArea"></span>
+    </div>
+</div>
+<div class="row templatemo-form-buttons">
+    <div class="col-md-12">
+        <button id="btnSave" type="button" class="btn btn-primary SubmitLock" data-toggle="modal">提交</button>
+        <button id="btnReset" type="reset" class="btn btn-default">重置</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15"></div>
+</div>

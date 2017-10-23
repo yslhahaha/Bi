@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Manage/Views/Shared/_Layout.cshtml";
+}
+<h1>编辑用户</h1>
+<div class="row" style="width:80%;">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @id = "form1", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.Partial("Partial/_UserPartial")
+        }
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#USER_NAME").attr("readonly", true);
+        $("input[name='rbUserType']").attr("disabled", true);
+
+        Submit("btnSave", "form1", "/Manage/User/Edit", "保存记录成功", false, beforeFun, afterFun);
+    });
+
+    var beforeFun = function () {
+        //放验证代码,验证不通过返回false
+        if (!IsRequired(".IsRequired")) {
+            return false;
+        }
+        return true;
+    }
+
+    var afterFun = function (flag) { }
+</script>
+

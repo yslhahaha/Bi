@@ -1,0 +1,299 @@
+﻿@model Bi.Domain.TB_SYS_ROLE
+@Html.HiddenFor(m => m.ROLE_ID)
+<div class="row">
+    <div class="col-md-6 margin-bottom-15">
+        <div class="btn-group" data-toggle="buttons">
+            @if (Model != null && Model.STATUS == 1)
+            {
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbStatus", "1", true)<text>启用</text>
+                </label>
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbStatus", "0", false)<text>停用</text>
+                </label>
+            }
+            else
+            {
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbStatus", "1", true)<text>启用</text>
+                </label>
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbStatus", "0", false)<text>停用</text>
+                </label>
+            }
+        </div>
+    </div>
+    <div class="col-md-6 margin-bottom-15">
+        <div class="btn-group" data-toggle="buttons">
+            @if (Model != null && Model.IS_ADMIN == 1)
+            {
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbIsAdmin", "1", true)<text>管理员角色</text>
+                </label>
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbIsAdmin", "0", false)<text>普通角色</text>
+                </label>
+            }
+            else
+            {
+                <label class="btn btn-primary">
+                    @Html.RadioButton("rbIsAdmin", "1", false)<text>管理员角色</text>
+                </label>
+                <label class="btn btn-primary active">
+                    @Html.RadioButton("rbIsAdmin", "0", true)<text>普通角色</text>
+                </label>
+            }
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 margin-bottom-15">
+        <label for="roleType">角色分类</label>
+        <select multiple="multiple" class="form-control" style="height:250px;" id="roleType"></select>
+    </div>
+    <div class="col-md-6 margin-bottom-15">
+        <label for="roleName">角色名称列表(双击修改)</label>
+        <select multiple="multiple" class="form-control" style="height:250px;" id="roleName"></select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 margin-bottom-15">
+        @Html.LabelFor(m => m.ROLE_TYPE, "角色分类", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.ROLE_TYPE, new Dictionary<string, object>() { { "class", "form-control IsRequired IsPositiveNum2" }
+       , { "title", "角色分类" } , { "maxlength", "50" } })
+        @Html.ValidationMessageFor(m => m.ROLE_TYPE)
+    </div>
+    <div class="col-md-6 margin-bottom-15">
+        @Html.LabelFor(m => m.ROLE_NAME, "角色名称", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.ROLE_NAME, new { @maxlength = "50", @class = "form-control IsRequired", @title = "角色名称" })
+        @Html.ValidationMessageFor(m => m.ROLE_NAME)
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        <label for="roleType">权限目录</label>
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/treeview/bootstrap-treeview.css")" />
+        <script type="text/javascript" src="~/Scripts/treeview/bootstrap-treeview.js"></script>
+        <div id="tree"></div>
+        <input type="hidden" id="hidRoleDirIds" name="hidRoleDirIds" value="" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        @Html.LabelFor(m => m.DESCR, "角色描述", new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.DESCR, new { @maxlength = "500", @class = "form-control", @title = "角色描述" })
+        <input type="hidden" id="hidRoles" value="" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15">
+        <span id="msgArea"></span>
+    </div>
+</div>
+<div class="row templatemo-form-buttons">
+    <div class="col-md-12">
+        <button id="btnSave" type="button" class="btn btn-primary SubmitLock newrole" data-toggle="modal">提交</button>
+        <button id="btnReset" type="reset" class="btn btn-default newrole">重置</button>
+
+        <button id="btnEdit" type="button" class="btn btn-primary SubmitLock editrole" style="display:none;" data-toggle="modal">保存修改</button>
+        <button id="btnCancelEdit" type="button" class="btn btn-primary SubmitLock editrole" style="display:none;" data-toggle="modal">取消修改</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 margin-bottom-15"></div>
+</div>
+<script>
+    $(function () {
+        GetRoles();
+        GetRoleDirs("");
+
+        $("#btnCancelEdit").click(function () {
+            ClearForm();
+        });
+    });
+
+    function GetRoles() {
+        var url = "/manage/role/getlist";
+
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: url,
+            beforeSend: function () { },
+            success: function (roles) { // roles 返回的json数据
+
+                $("#hidRoles").val(roles);
+                var roles = $.parseJSON(roles);
+
+                $.each(roles, function (idx, item) {
+                    if ($("#roleType option[value='" + item.ROLE_TYPE + "']").length == 0) {
+                        $("#roleType").append("<option value='" + item.ROLE_TYPE + "'>" + item.ROLE_TYPE + "</option>");
+                    }
+                });
+                $("#roleType").change(function () {
+                    $("#roleName option").remove();
+                    if ($("#roleType option").length > 0) {
+                        $("#ROLE_TYPE").val($("#roleType").find("option:selected").text());
+                        $.each(roles, function (idx, item) {
+                            if (item.ROLE_TYPE == $("#roleType").val()) {
+                                $("#roleName").append("<option value='" + item.ROLE_ID + "'>" + item.ROLE_NAME + "</option>");
+                            }
+                        });
+                    }
+                });
+
+                $("#roleName").dblclick(function () {
+                    if ($("#roleName option").length > 0) {
+                        var optionText = $("#roleName").find("option:selected").text();
+                        var optionVal = $("#roleName").val();
+
+                        var roletype = $("#roleType").find("option:selected").text();
+
+                        if (optionText != "" && roletype != "") {
+                            var rlist = $.parseJSON($("#hidRoles").val());
+
+                            $.each(rlist, function (idx, item) {
+                                if (item.ROLE_ID == optionVal) {
+                                    $("#ROLE_TYPE").val(roletype);
+                                    $("#ROLE_NAME").val(optionText);
+                                    $("#ROLE_ID").val(optionVal);
+
+                                    $("#DESCR").val(item.DESCR);
+                                    $(".newrole").hide();
+                                    $(".editrole").show();
+                                    $("#roleTitle").text("维护角色");
+
+                                    GetRoleDirs(optionVal);
+
+                                    return false;
+                                }
+                            });
+                        } else {
+                            alert("不能编辑");
+                        }
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                var errs = ParseExceptionMsg(xhr);
+                ShowMsgDialog(errs, "no", false);
+            },
+            complete: function () { }
+        });
+    }
+
+    function ClearForm() {
+        $("#ROLE_TYPE").val("");
+        $("#ROLE_NAME").val("");
+        $("#ROLE_ID").val("");
+        $("#DESCR").val("");
+
+        $(".newrole").show();
+        $(".editrole").hide();
+
+        $("#roleTitle").text("新增角色");
+
+        $("#roleName option").remove();
+
+        GetRoles();
+        GetRoleDirs("");
+    }
+
+    function FillSelectedNodeInForm(nodeId) {
+        if (nodeId == 0)
+            $("#hidRoleDirIds").val("");
+
+        var parentNode = $("#tree").treeview("getNode", nodeId);
+
+        if (parentNode.nodes) {
+            for (x in parentNode.nodes) {
+                if (parentNode.nodes[x].state.checked) {
+                    $("#hidRoleDirIds").val($("#hidRoleDirIds").val() + parentNode.nodes[x].id + ",");
+                }
+                FillSelectedNodeInForm(parentNode.nodes[x].nodeId);
+            }
+        }
+    }
+
+    function GetRoleDirs(roleId) {
+        var url = "/App/Ajax/TreeCall.ashx?type=roledir";
+        if (roleId != "") { url += "&roleid=" + roleId; }
+
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: url,
+            beforeSend: function () { AddLoading($("#tree")); },
+            success: function (res) {
+                Loading(false);
+                $('#tree').treeview({
+                    showCheckbox: true,
+                    selectable: false,
+                    data: eval("(" + res + ")"),
+                    onNodeChecked: function (event, node) {
+                        var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+                        if (selectNodes) { //子节点不为空，则选中所有子节点
+                            $('#tree').treeview('checkNode', [selectNodes, { silent: true }]);
+                        }
+                        var parentNode = $("#tree").treeview("getNode", node.parentId);
+                        setParentNodeCheck(node);
+                    },
+                    onNodeUnchecked: function (event, node) {
+                        var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+                        if (selectNodes) { //子节点不为空，则取消选中所有子节点
+                            $('#tree').treeview('uncheckNode', [selectNodes, { silent: true }]);
+                        }
+                        setParentNodeCheck(node);
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                Loading(false);
+                var errs = ParseExceptionMsg(xhr);
+                ShowErrorsMsgDialog(errs, "no", false);
+            },
+            complete: function () {
+                Loading(false);
+            }
+        });
+    }
+
+    function getChildNodeIdArr(node) {
+        var ts = [];
+        if (node.nodes) {
+            for (x in node.nodes) {
+                ts.push(node.nodes[x].nodeId);
+                if (node.nodes[x].nodes) {
+                    var getNodeDieDai = getChildNodeIdArr(node.nodes[x]);
+                    for (j in getNodeDieDai) {
+                        ts.push(getNodeDieDai[j]);
+                    }
+                }
+            }
+        } else {
+            ts.push(node.nodeId);
+        }
+        return ts;
+    }
+
+    function setParentNodeCheck(node) {
+        var parentNode = $("#tree").treeview("getNode", node.parentId);
+        if (parentNode.nodes) {
+            var checkedCount = 0;
+            for (x in parentNode.nodes) {
+                if (parentNode.nodes[x].state.checked) {
+                    checkedCount++;
+                }
+            }
+            if (checkedCount > 0 && checkedCount <= parentNode.nodes.length) {
+                $('#tree').treeview('checkNode', [node.parentId, { silent: true }]);
+                setParentNodeCheck(parentNode);
+            }
+            if (checkedCount === 0) {
+                $("#tree").treeview("uncheckNode", node.parentId, { silent: true });
+                setParentNodeCheck(parentNode);
+            }
+        }
+    }
+
+</script>

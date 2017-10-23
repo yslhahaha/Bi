@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Manage/Views/Shared/_Layout.cshtml";
+}
+<h1 id="roleTitle">新增角色</h1>
+<div class="row" style="width:80%;">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "Role", FormMethod.Post, new { @id = "form1", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.Partial("Partial/_RolePartial")
+        }
+    </div>
+</div>
+<script>
+    $(function () {
+        Submit("btnSave", "form1", "/Manage/Role/Create", "保存记录成功", true, beforeFun, afterFun);
+        Submit("btnEdit", "form1", "/Manage/Role/Create", "保存记录成功", false, beforeFun, afterFun);
+    });
+
+    var beforeFun = function () {
+        //放验证代码,验证不通过返回false
+        if (!IsRequired(".IsRequired")) {
+            return false;
+        }
+
+        //方法在_RolePartial.cshtml
+        FillSelectedNodeInForm(0);
+
+        return true;
+    }
+
+    var afterFun = function (flag) { ClearForm(); }
+</script>

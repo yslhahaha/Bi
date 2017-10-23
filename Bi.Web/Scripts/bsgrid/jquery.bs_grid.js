@@ -129,7 +129,7 @@
                     elem_html = "", tools_html = "";
 
                 // create basic html structure ---------------------------------
-                elem_html += '<div id="' + tools_id + '" class="' + settings.toolsClass + '"></div>';
+                elem_html += '<div ss=ss id="' + tools_id + '" class="' + settings.toolsClass + '"></div>';
 
                 elem_html += '<div id="' + table_container_id + '" class="' + settings.dataTableContainerClass + '">';
                 elem_html += '<table id="' + table_id + '" class="' + settings.dataTableClass + '"></table>';
@@ -224,67 +224,67 @@
                 tools_html += '</div>';
 
                 // sorting list ------------------------------------------------
-                tools_html += '<div class="btn-group pull-right">';
+                //tools_html += '<div class="btn-group pull-right">';
 
-                tools_html += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="' + rsc_bs_dg.sorting + '">';
-                tools_html += '<span class="' + settings.sortingListLaunchButtonIconClass + '"></span>';
-                tools_html += '<span class="caret"></span>';
-                tools_html += '</button>';
+                //tools_html += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="' + rsc_bs_dg.sorting + '">';
+                //tools_html += '<span class="' + settings.sortingListLaunchButtonIconClass + '"></span>';
+                //tools_html += '<span class="caret"></span>';
+                //tools_html += '</button>';
 
-                tools_html += '<ul id="' + sorting_list_id + '" class="dropdown-menu dropdown-menu-right">';
+                //tools_html += '<ul id="' + sorting_list_id + '" class="dropdown-menu dropdown-menu-right">';
 
-                for(var i in settings.sorting) {
-                    var sort_name = get_sorting_name(settings.sorting[i]),
-                        checked_asc = settings.sorting[i]["order"] == "ascending" ? " checked" : "",
-                        checked_desc = settings.sorting[i]["order"] == "descending" ? " checked" : "",
-                        checked_none = settings.sorting[i]["order"] == "none" ? " checked" : "";
-                    default_sorting_list += '<li><a href="javascript:void(0);">' +
-                        '<label class="' + settings.sortingLabelCheckboxClass + '"><input type="radio" name="' + sorting_radio_name + i + '"' + checked_asc + '>' + rsc_bs_dg.sort_ascending + '</label>' +
-                        '<label class="' + settings.sortingLabelCheckboxClass + '"><input type="radio" name="' + sorting_radio_name + i + '"' + checked_desc + '>' + rsc_bs_dg.sort_descending + '</label>' +
-                        '<label class="' + settings.sortingLabelCheckboxClass + '"><input type="radio" name="' + sorting_radio_name + i + '"' + checked_none + '>' + rsc_bs_dg.sort_none + '</label>' +
-                        '<span class="' + settings.sortingNameClass + '">' + sort_name + '</span>' +
-                        '</a></li>';
-                }
-                default_sorting_list += '<li class="not-sortable ' + settings.columnsListDividerClass + '"></li>';
-                default_sorting_list += '<li class="not-sortable columns-li-padding"><button class="' + settings.columnsListDefaultButtonClass + '">' + rsc_bs_dg.sorting_default + '</button></li>';
+                //for(var i in settings.sorting) {
+                //    var sort_name = get_sorting_name(settings.sorting[i]),
+                //        checked_asc = settings.sorting[i]["order"] == "ascending" ? " checked" : "",
+                //        checked_desc = settings.sorting[i]["order"] == "descending" ? " checked" : "",
+                //        checked_none = settings.sorting[i]["order"] == "none" ? " checked" : "";
+                //    default_sorting_list += '<li><a href="javascript:void(0);">' +
+                //        '<label class="' + settings.sortingLabelCheckboxClass + '"><input type="radio" name="' + sorting_radio_name + i + '"' + checked_asc + '>' + rsc_bs_dg.sort_ascending + '</label>' +
+                //        '<label class="' + settings.sortingLabelCheckboxClass + '"><input type="radio" name="' + sorting_radio_name + i + '"' + checked_desc + '>' + rsc_bs_dg.sort_descending + '</label>' +
+                //        '<label class="' + settings.sortingLabelCheckboxClass + '"><input type="radio" name="' + sorting_radio_name + i + '"' + checked_none + '>' + rsc_bs_dg.sort_none + '</label>' +
+                //        '<span class="' + settings.sortingNameClass + '">' + sort_name + '</span>' +
+                //        '</a></li>';
+                //}
+                //default_sorting_list += '<li class="not-sortable ' + settings.columnsListDividerClass + '"></li>';
+                //default_sorting_list += '<li class="not-sortable columns-li-padding"><button class="' + settings.columnsListDefaultButtonClass + '">' + rsc_bs_dg.sorting_default + '</button></li>';
 
-                //save default columns list
-                if(typeof elem.data(pluginStatus)["default_sorting_list"] === "undefined") {
-                    elem.data(pluginStatus)["default_sorting_list"] = default_sorting_list;
-                }
+                ////save default columns list
+                //if(typeof elem.data(pluginStatus)["default_sorting_list"] === "undefined") {
+                //    elem.data(pluginStatus)["default_sorting_list"] = default_sorting_list;
+                //}
 
-                tools_html += default_sorting_list;
+                //tools_html += default_sorting_list;
 
-                tools_html += '</ul>';
+                //tools_html += '</ul>';
 
-                tools_html += '</div>';
+                //tools_html += '</div>';
 
                 // selection list ----------------------------------------------
-                if(settings.row_primary_key &&
-                    (settings.rowSelectionMode == "single" || settings.rowSelectionMode == "multiple")) {
-                    tools_html += '<div class="btn-group pull-right">';
+                //if(settings.row_primary_key &&
+                //    (settings.rowSelectionMode == "single" || settings.rowSelectionMode == "multiple")) {
+                //    tools_html += '<div class="btn-group pull-right">';
 
-                    tools_html += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="' + rsc_bs_dg.select + '">';
-                    tools_html += '<span class="' + settings.selectButtonIconClass + '"></span>';
-                    tools_html += '<span id="' + selected_rows_id + '" class="' + settings.selectedRowsClass + '">' + settings.selected_ids.length + '</span>';
-                    tools_html += '<span class="caret"></span>';
-                    tools_html += '</button>';
+                //    tools_html += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="' + rsc_bs_dg.select + '">';
+                //    tools_html += '<span class="' + settings.selectButtonIconClass + '"></span>';
+                //    tools_html += '<span id="' + selected_rows_id + '" class="' + settings.selectedRowsClass + '">' + settings.selected_ids.length + '</span>';
+                //    tools_html += '<span class="caret"></span>';
+                //    tools_html += '</button>';
 
-                    tools_html += '<ul id="' + selection_list_id + '" class="dropdown-menu dropdown-menu-right">';
+                //    tools_html += '<ul id="' + selection_list_id + '" class="dropdown-menu dropdown-menu-right">';
 
-                    if(settings.rowSelectionMode == "multiple") {
-                        tools_html += '<li><a href="javascript:void(0);">' + rsc_bs_dg.select_all_in_page + '</a></li>';
-                        tools_html += '<li><a href="javascript:void(0);">' + rsc_bs_dg.deselect_all_in_page + '</a></li>';
-                        tools_html += '<li><a href="javascript:void(0);">' + rsc_bs_dg.select_inverse_in_page + '</a></li>';
-                        tools_html += '<li class="not-sortable ' + settings.columnsListDividerClass + '"></li>';
-                    }
+                //    if(settings.rowSelectionMode == "multiple") {
+                //        tools_html += '<li><a href="javascript:void(0);">' + rsc_bs_dg.select_all_in_page + '</a></li>';
+                //        tools_html += '<li><a href="javascript:void(0);">' + rsc_bs_dg.deselect_all_in_page + '</a></li>';
+                //        tools_html += '<li><a href="javascript:void(0);">' + rsc_bs_dg.select_inverse_in_page + '</a></li>';
+                //        tools_html += '<li class="not-sortable ' + settings.columnsListDividerClass + '"></li>';
+                //    }
 
-                    tools_html += '<li><a href="javascript:void(0);">' + rsc_bs_dg.deselect_all + '</a></li>';
+                //    tools_html += '<li><a href="javascript:void(0);">' + rsc_bs_dg.deselect_all + '</a></li>';
 
-                    tools_html += '</ul>';
+                //    tools_html += '</ul>';
 
-                    tools_html += '</div>';
-                }
+                //    tools_html += '</div>';
+                //}
 
                 // filter toggle button ----------------------------------------
                 if(settings.useFilters) {

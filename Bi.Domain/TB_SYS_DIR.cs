@@ -25,5 +25,6 @@ namespace Bi.Domain
         public Nullable<short> SORT_NO { get; set; }
         public byte DELETED { get; set; }
         public Nullable<decimal> IS_GROUP { get; set; }
+        public Nullable<decimal> D_LEVEL { get; set; }
     }
 }

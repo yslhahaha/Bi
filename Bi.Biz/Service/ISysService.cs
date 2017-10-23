@@ -17,8 +17,6 @@ namespace Bi.Biz.Service
         /// <returns></returns>
         bool UpdateUser(TB_ADMIN_USER userDto, TB_SYS_LOG log);
 
-        bool UpdatePwd(TB_ADMIN_USER userDto, TB_SYS_LOG log);
-
         bool DeleteUser(string userId, TB_SYS_LOG log);
 
         TB_ADMIN_USER GetUserByKey(string userId);
@@ -56,11 +54,11 @@ namespace Bi.Biz.Service
 
         TB_SYS_DIR GetDirByKey(string id);
 
-        bool Create(TB_SYS_DIR dirDto, TB_SYS_LOG log);
+        bool CreateDir(TB_SYS_DIR dirDto, TB_SYS_LOG log);
 
-        bool Update(TB_SYS_DIR dirDto, TB_SYS_LOG log);
+        bool UpdateDir(TB_SYS_DIR dirDto, TB_SYS_LOG log);
 
-        bool Delete(string id, TB_SYS_LOG log);
+        bool DeleteDir(string id, TB_SYS_LOG log);
 
         TB_SYS_DIR GetDirByName(string name, string dirId);
 

@@ -119,7 +119,7 @@ Write your own classes in other css file.
 .filter_input_number {
     width: 75px;
     margin: 0 5px;
-    padding: 0;
+    padding: 0 5px;
 }
 
 .filter_input_date {

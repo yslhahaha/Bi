@@ -15,6 +15,15 @@
     }
 
     /// <summary>
+    /// 字典表 固定值
+    /// </summary>
+    public static class SortingKey
+    {
+        public const string ASC = "ascending";
+        public const string DESC = "descending";
+    }
+
+    /// <summary>
     /// 系统Session KEY
     /// </summary>
     public static class SessionKey

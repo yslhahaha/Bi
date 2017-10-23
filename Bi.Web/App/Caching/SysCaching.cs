@@ -6,13 +6,15 @@ using log4net;
 using Microsoft.Practices.Unity;
 using Bi.Biz.Service;
 using Bi.Domain;
+using Bi.Web.App_Start;
 
 namespace Bi.Web.App.Caching
 {
     public class SysCaching : BaseCaching
     {
-        [Dependency]
-        public ISysService SysService { get; set; }
+        public ISysService SysService;
+
+        public SysCaching() { SysService = UnityConfig.GetService<ISysService>(); }
 
         ILog logger = LogManager.GetLogger("SystemError");
 

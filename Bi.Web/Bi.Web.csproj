@@ -212,6 +212,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Ajax\TreeCall.ashx.cs">
+      <DependentUpon>TreeCall.ashx</DependentUpon>
+    </Compile>
     <Compile Include="App\Ajax\QueryCall.ashx.cs">
       <DependentUpon>QueryCall.ashx</DependentUpon>
     </Compile>
@@ -222,6 +225,8 @@
     <Compile Include="App\Caching\SysCaching.cs" />
     <Compile Include="App\Caching\ViewCaching.cs" />
     <Compile Include="App\Facade\SignInHelper.cs" />
+    <Compile Include="App\Facade\DirFacade.cs" />
+    <Compile Include="App\Facade\RoleFacade.cs" />
     <Compile Include="App\Facade\UserFacade.cs" />
     <Compile Include="App\Facade\WebHelper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -234,10 +239,14 @@
     <Compile Include="Areas\Auth\AuthAreaRegistration.cs" />
     <Compile Include="Areas\Auth\Controllers\LoginController.cs" />
     <Compile Include="Areas\Auth\Models\LoginVM.cs" />
+    <Compile Include="Areas\Manage\Controllers\DirController.cs" />
     <Compile Include="Areas\Manage\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Manage\Controllers\RoleController.cs" />
     <Compile Include="Areas\Manage\Controllers\SysController.cs" />
+    <Compile Include="Areas\Manage\Controllers\UserController.cs" />
     <Compile Include="Areas\Manage\ManageAreaRegistration.cs" />
     <Compile Include="Areas\Manage\Models\GridVM.cs" />
+    <Compile Include="Areas\Manage\Models\Node.cs" />
     <Compile Include="Areas\Services\ServicesAreaRegistration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -253,6 +262,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bsgrid\jquery-ui-timepicker-addon.css" />
     <Content Include="Content\bsgrid\jquery-ui.min.css" />
     <Content Include="Content\bsgrid\jquery.bs_grid.bs2.min.css" />
     <Content Include="Content\bsgrid\jquery.bs_grid.min.css" />
@@ -262,6 +272,7 @@
     <Content Include="Content\images\loader.gif" />
     <Content Include="Content\sign.css" />
     <Content Include="Content\templatemo_main.css" />
+    <Content Include="Content\treeview\bootstrap-treeview.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -285,24 +296,35 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="Areas\Manage\Views\Sys\NewUser.cshtml" />
-    <Content Include="Areas\Manage\Views\Sys\Partial\_UserPartial.cshtml" />
-    <Content Include="Areas\Manage\Views\Sys\Users.cshtml" />
     <Content Include="Areas\Manage\Views\Shared\Uc\_GridPartial.cshtml" />
     <Content Include="App\Ajax\QueryCall.ashx" />
-    <Content Include="Areas\Manage\Views\Sys\EditUser.cshtml" />
+    <Content Include="Areas\Manage\Views\User\Create.cshtml" />
+    <Content Include="Areas\Manage\Views\User\Edit.cshtml" />
+    <Content Include="Areas\Manage\Views\User\Partial\_UserPartial.cshtml" />
+    <Content Include="Areas\Manage\Views\User\Query.cshtml" />
+    <Content Include="Areas\Manage\Views\Dir\Query.cshtml" />
+    <Content Include="Areas\Manage\Views\Dir\Create.cshtml" />
+    <Content Include="Areas\Manage\Views\Dir\Partial\_DirPartial.cshtml" />
+    <Content Include="App\Ajax\TreeCall.ashx" />
+    <Content Include="Areas\Manage\Views\Dir\Edit.cshtml" />
+    <Content Include="Areas\Manage\Views\Role\Query.cshtml" />
+    <Content Include="Areas\Manage\Views\Role\Create.cshtml" />
+    <Content Include="Areas\Manage\Views\Role\Partial\_RolePartial.cshtml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\bsgrid\bs_grid\en.min.js" />
     <Content Include="Scripts\bsgrid\bs_pagination\el.min.js" />
     <Content Include="Scripts\bsgrid\bs_pagination\en.min.js" />
+    <Content Include="Scripts\bsgrid\jquery-ui-timepicker-addon.js" />
+    <Content Include="Scripts\bsgrid\jquery-ui-timepicker-zh-CN.js" />
     <Content Include="Scripts\bsgrid\jquery-ui.js" />
     <Content Include="Scripts\bsgrid\jquery.bs_grid.js" />
     <Content Include="Scripts\bsgrid\jquery.bs_grid.min.js" />
     <Content Include="Scripts\bsgrid\jquery.bs_pagination.min.js" />
     <Content Include="Scripts\bsgrid\jquery.jui_filter_rules.js" />
     <Content Include="Scripts\bsgrid\jquery.jui_filter_rules.min.js" />
+    <Content Include="Scripts\bsgrid\jquery.ui.datepicker-zh-CN.js.js" />
     <Content Include="Scripts\bsgrid\jquery.ui.touch-punch.min.js" />
     <Content Include="Scripts\bsgrid\jui_filter_rules\en.js" />
     <Content Include="Scripts\bsgrid\jui_filter_rules\en.min.js" />
@@ -325,6 +347,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\templatemo_script.js" />
+    <Content Include="Scripts\treeview\bootstrap-treeview.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -366,6 +389,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Auth\Views\Shared\" />
+    <Folder Include="Areas\Manage\Views\Sys\" />
     <Folder Include="Areas\Services\Controllers\" />
     <Folder Include="Areas\Services\Models\" />
     <Folder Include="Areas\Services\Views\Shared\" />
